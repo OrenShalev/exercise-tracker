@@ -6,11 +6,12 @@
     <script src="https://unpkg.com/vue"></script>
 
     <script>
+        const WEEK = 7*24*60*60*1000;
+        
         Vue.component('workout-app', {
             props: ['log', ],
             template: `
                 <div>
-                ?{{log}}!
                     <p>Hello</p>
                     <stats v-bind:log="log"></stats>
                     <workout-log v-bind:log="log"></workout-log>
@@ -21,15 +22,19 @@
         Vue.component('stats', {
             props: ['log', ],
             computed: {
-                logLastWeek: function() { return this.log.filter(({date}) => (Date.now() - date) <= 7*24*60*60*1000); },
+                logPastWeek: function() { return this.log.filter(({date}) => (Date.now() - date) <= WEEK); },
+                durationPastWeek: function() { return this.logPastWeek.reduce((total, {duration})=>total+duration, 0); },
+                oldestEntryPastWeek: function() { return this.logPastWeek.reverse()[0]; },
+                nextChange: function() { return new Date(this.oldestEntryPastWeek.date - -WEEK); },
+                // hack to add to a date
             },
             template: `
                 <div>
                     <p>Entries: {{log.length}}</p>
-                    <p>Entries last week: {{logLastWeek.length}}</p>
-                    <p>Duration last week: {{logLastWeek.reduce((total, {duration})=>total+duration, 0)}}</p>
-                    <p>Next change: {{logLastWeek.reverse()[0].date+7*24*60*60*1000}}</p>
-                    <p>Duration without oldest entry from last week: {{logLastWeek.reverse().slice(1).reduce((total, {duration})=>total+duration, 0)}}</p>
+                    <p>Entries past week: {{logPastWeek.length}}</p>
+                    <p>Duration past week: {{durationPastWeek}}</p>
+                    <p>Next change: {{nextChange}}</p>
+                    <p>Duration after next change: {{durationPastWeek - oldestEntryPastWeek.duration}}</p>
                 </div>
             `,
         });
