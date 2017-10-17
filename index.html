@@ -68,7 +68,7 @@ Firebase
                 { date: new Date(Date.now() - 86400000*7), duration: 10 },
                 { date: new Date(Date.now() - 86400000*8), duration: 10 },
                 { date: new Date(Date.now() - 86400000*3), duration: 10 },
-            ],
+            ].sort((entry1, entry2) => entry2.date-entry1.date),
         },
     });
 </script>
