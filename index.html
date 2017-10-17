@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Exercise Tracker</title>
+    <script src="https://unpkg.com/vue"></script>
 </head>
 <body>
+<!--
+<stats>
+    <past-week> Minutes in the past week </past-week>
+    <next-change> Next change: when and how much </next-change>
+</stats>
+<add-workout> Add new: how much and when (now or specify date) </add-workout>
+<workout-log> Log </workout-log>
+data service
 
+Manifest
+Service worker
+Firebase
+-->
+
+<div id="app">
+    {{ message }}
+</div>
+
+<script>
+    const app = new Vue({
+        el: `#app`,
+        data: {
+            message: `Hello Vue`,
+        },
+    });
+</script>
 </body>
 </html>
