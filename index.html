@@ -11,7 +11,21 @@
             template: `
                 <div>
                     <p>Hello</p>
+                    <stats v-bind:log="log"></stats>
                     <workout-log v-bind:log="log"></workout-log>
+                </div>
+            `,
+        });
+
+        Vue.component('stats', {
+            props: ['log'],
+            template: `
+                <div>
+                    <p>Entries: {{log.length}}</p>
+                    <p>Entries last week: {{log.filter(({date}) => (Date.now() - date) <= 7*24*60*60*1000 ).length}}</p>
+                    <p>Duration last week: {{log.filter(({date}) => (Date.now() - date) <= 7*24*60*60*1000 ).reduce((total, {duration})=>total+duration, 0)}}</p>
+                    <p>Next change: {{log.filter(({date}) => (Date.now() - date) <= 7*24*60*60*1000 ).reverse()[0].date+7*24*60*60*1000}}</p>
+                    <p>Duration without oldest entry from last week: {{log.filter(({date}) => (Date.now() - date) <= 7*24*60*60*1000 ).reverse().slice(1).reduce((total, {duration})=>total+duration, 0)}}</p>
                 </div>
             `,
         });
