@@ -4,6 +4,37 @@
     <meta charset="UTF-8">
     <title>Exercise Tracker</title>
     <script src="https://unpkg.com/vue"></script>
+
+    <script>
+        Vue.component('workout-app', {
+            props: ['log'],
+            template: `
+                <div>
+                    <p>Hello</p>
+                    <workout-log v-bind:log="log"></workout-log>
+                </div>
+            `,
+        });
+
+        Vue.component('workout-log', {
+            props: ['log'],
+            template: `
+                <section>
+                    <h2>Workout log:</h2>
+                    Entries: {{log.length}}
+                    <table>
+                        <tr v-for="entry in log">
+                            <!--<td>{{entry}}</td>-->
+                            <td>{{entry.date}}</td>
+                            <td>{{entry.duration}}</td>
+                        </tr>
+                    </table>
+                </section>
+            `,
+        });
+
+
+    </script>
 </head>
 <body>
 <!--
@@ -20,15 +51,24 @@ Service worker
 Firebase
 -->
 
-<div id="app">
-    {{ message }}
-</div>
+<workout-app v-bind:log="log"></workout-app>
 
 <script>
     const app = new Vue({
-        el: `#app`,
+        el: `workout-app`,
         data: {
-            message: `Hello Vue`,
+            log2: [ 123, `abc`, true, Math, Math.random, ],
+            log: [
+                { date: new Date(), duration: 10 },
+                { date: new Date(Date.now() - 86400000), duration: 10 },
+                { date: new Date(Date.now() - 86400000*2), duration: 10 },
+                { date: new Date(Date.now() - 86400000*4), duration: 10 },
+                { date: new Date(Date.now() - 86400000*5), duration: 10 },
+                { date: new Date(Date.now() - 86400000*6), duration: 10 },
+                { date: new Date(Date.now() - 86400000*7), duration: 10 },
+                { date: new Date(Date.now() - 86400000*8), duration: 10 },
+                { date: new Date(Date.now() - 86400000*3), duration: 10 },
+            ],
         },
     });
 </script>
