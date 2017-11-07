@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <title>Exercise Tracker</title>
     <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="style.css">
 
     <script>
         const WEEK = 7*24*60*60*1000;
-        
+
         Vue.component('workout-app', {
             props: ['log', ],
             template: `
-                <div>
+                <section>
                     <p>Hello</p>
                     <stats v-bind:log="log"></stats>
+                    <add-workout :log="log"></add-workout>
                     <workout-log v-bind:log="log"></workout-log>
-                </div>
+                </section>
             `,
         });
 
@@ -29,13 +31,31 @@
                 // hack to add to a date
             },
             template: `
-                <div>
+                <section>
                     <p>Entries: {{log.length}}</p>
                     <p>Entries past week: {{logPastWeek.length}}</p>
                     <p>Duration past week: {{durationPastWeek}}</p>
                     <p>Next change: {{nextChange}}</p>
                     <p>Duration after next change: {{durationPastWeek - oldestEntryPastWeek.duration}}</p>
-                </div>
+                </section>
+            `,
+        });
+
+        Vue.component('add-workout', {
+            props: ['log', ],
+            methods: {
+                addAmount: function() {
+                    console.log('ping');
+                },
+            },
+            template: `
+                <section>
+                    <label for="add-workout-amount">Minutes: </label>
+                    <input id="add-workout-amount" />
+                    <label for="add-workout-date">Date and time: </label>
+                    <input id="add-workout-date" type="datetime" />
+                    <button v-on:click="addAmount()">Add</button>
+                </section>
             `,
         });
 
