@@ -1,4 +1,4 @@
-section {
+section, td {
     outline: 1px solid lightgrey;
     padding: .5em;
 }

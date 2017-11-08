@@ -9,11 +9,15 @@
     <script>
         const WEEK = 7*24*60*60*1000;
 
+        Vue.filter('formatDate', function (date) {
+            return date.toLocaleString('he');
+        });
+
         Vue.component('workout-app', {
             props: ['log', ],
             template: `
                 <section>
-                    <p>Hello</p>
+                    <h3>Hello</h3>
                     <stats v-bind:log="log"></stats>
                     <add-workout :log="log"></add-workout>
                     <workout-log v-bind:log="log"></workout-log>
@@ -35,7 +39,7 @@
                     <p>Entries: {{log.length}}</p>
                     <p>Entries past week: {{logPastWeek.length}}</p>
                     <p>Duration past week: {{durationPastWeek}}</p>
-                    <p>Next change: {{nextChange}}</p>
+                    <p>Next change: {{nextChange | formatDate}}</p>
                     <p>Duration after next change: {{durationPastWeek - oldestEntryPastWeek.duration}}</p>
                 </section>
             `,
@@ -46,14 +50,21 @@
             methods: {
                 addAmount: function() {
                     console.log('ping');
+                    const duration = document.querySelector('#add-workout-duration').value;
+                    const dateValue = document.querySelector('#add-workout-date').value;
+                    const date = dateValue? new Date(Date.parse(dateValue)) : new Date();
+                    this.log.unshift({
+                        date,
+                        duration: Number(duration)
+                    });
                 },
             },
             template: `
                 <section>
-                    <label for="add-workout-amount">Minutes: </label>
-                    <input id="add-workout-amount" />
+                    <label for="add-workout-duration">Duration: </label>
+                    <input id="add-workout-duration" type="number"/>
                     <label for="add-workout-date">Date and time: </label>
-                    <input id="add-workout-date" type="datetime" />
+                    <input id="add-workout-date" type="datetime-local" />
                     <button v-on:click="addAmount()">Add</button>
                 </section>
             `,
@@ -63,14 +74,22 @@
             props: ['log'],
             template: `
                 <section>
-                    <h2>Workout log:</h2>
+                    <p>Workout log:</p>
                     Entries: {{log.length}}
                     <table>
-                        <tr v-for="entry in log">
-                            <!--<td>{{entry}}</td>-->
-                            <td>{{entry.date}}</td>
-                            <td>{{entry.duration}}</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <td>Date</td>
+                                <td>Duration</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="entry in log">
+                                <!--<td>{{entry}}</td>-->
+                                <td>{{entry.date | formatDate}}</td>
+                                <td>{{entry.duration}}</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </section>
             `,
