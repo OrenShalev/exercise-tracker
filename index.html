@@ -5,100 +5,21 @@
     <title>Exercise Tracker</title>
     <script src="https://unpkg.com/vue"></script>
     <link rel="stylesheet" href="style.css">
+    <script src="addWorkout.js"></script>
+    <script src="formatDate.js"></script>
+    <script src="stats.js"></script>
+    <script src="workoutLog.js"></script>
+    <script src="workoutApp.js"></script>
 
     <script>
         const WEEK = 7*24*60*60*1000;
-
-        Vue.filter('formatDate', function (date) {
-            return date.toLocaleString('he');
-        });
-
-        Vue.component('workout-app', {
-            props: ['log', ],
-            template: `
-                <section>
-                    <h3>Hello</h3>
-                    <stats v-bind:log="log"></stats>
-                    <add-workout :log="log"></add-workout>
-                    <workout-log v-bind:log="log"></workout-log>
-                </section>
-            `,
-        });
-
-        Vue.component('stats', {
-            props: ['log', ],
-            computed: {
-                logPastWeek: function() { return this.log.filter(({date}) => (Date.now() - date) <= WEEK); },
-                durationPastWeek: function() { return this.logPastWeek.reduce((total, {duration})=>total+duration, 0); },
-                oldestEntryPastWeek: function() { return this.logPastWeek.reverse()[0]; },
-                nextChange: function() { return new Date(this.oldestEntryPastWeek.date - -WEEK); },
-                // hack to add to a date
-            },
-            template: `
-                <section>
-                    <p>Entries: {{log.length}}</p>
-                    <p>Entries past week: {{logPastWeek.length}}</p>
-                    <p>Duration past week: {{durationPastWeek}}</p>
-                    <p>Next change: {{nextChange | formatDate}}</p>
-                    <p>Duration after next change: {{durationPastWeek - oldestEntryPastWeek.duration}}</p>
-                </section>
-            `,
-        });
-
-        Vue.component('add-workout', {
-            props: ['log', ],
-            methods: {
-                addAmount: function() {
-                    console.log('ping');
-                    const duration = document.querySelector('#add-workout-duration').value;
-                    const dateValue = document.querySelector('#add-workout-date').value;
-                    const date = dateValue? new Date(Date.parse(dateValue)) : new Date();
-                    this.log.unshift({
-                        date,
-                        duration: Number(duration)
-                    });
-                },
-            },
-            template: `
-                <section>
-                    <label for="add-workout-duration">Duration: </label>
-                    <input id="add-workout-duration" type="number"/>
-                    <label for="add-workout-date">Date and time: </label>
-                    <input id="add-workout-date" type="datetime-local" />
-                    <button v-on:click="addAmount()">Add</button>
-                </section>
-            `,
-        });
-
-        Vue.component('workout-log', {
-            props: ['log'],
-            template: `
-                <section>
-                    <p>Workout log:</p>
-                    Entries: {{log.length}}
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Date</td>
-                                <td>Duration</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="entry in log">
-                                <!--<td>{{entry}}</td>-->
-                                <td>{{entry.date | formatDate}}</td>
-                                <td>{{entry.duration}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-            `,
-        });
-
-
     </script>
 </head>
 <body>
+
+    <workout-app v-bind:log="log"></workout-app>
+    <script src="main.js"></script>
+
 <!--
 <stats>
     <past-week> Minutes in the past week </past-week>
@@ -112,29 +33,5 @@ Manifest
 Service worker
 Firebase
 -->
-
-<workout-app v-bind:log="log"></workout-app>
-
-<script>
-    const app = new Vue({
-        el: `workout-app`,
-        data: {
-            log2: [ 123, `abc`, true, Math, Math.random, ],
-            log: [
-                { date: new Date(), duration: 10 },
-                { date: new Date(Date.now() - 86400000), duration: 10 },
-                { date: new Date(Date.now() - 86400000*2), duration: 10 },
-                { date: new Date(Date.now() - 86400000*4), duration: 10 },
-                { date: new Date(Date.now() - 86400000*5), duration: 10 },
-                { date: new Date(Date.now() - 86400000*6), duration: 10 },
-                { date: new Date(Date.now() - 86400000*7), duration: 10 },
-                { date: new Date(Date.now() - 86400000*8), duration: 10 },
-                { date: new Date(Date.now() - 86400000*3), duration: 10 },
-            ].sort((entry1, entry2) => entry2.date-entry1.date),
-        },
-        methods: {
-        },
-    });
-</script>
 </body>
 </html>
